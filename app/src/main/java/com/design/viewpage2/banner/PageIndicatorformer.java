@@ -1,11 +1,13 @@
 package com.design.viewpage2.banner;
 
+import android.view.View;
+
+import androidx.annotation.NonNull;
+
 /**
- * User: maodayu
- * Date: 2019/10/12
- * Time: 18:12
+ * author
  */
 public interface PageIndicatorformer {
 
-
+    void transIndicator(@NonNull View indicator, int totalPostion,int position);
 }

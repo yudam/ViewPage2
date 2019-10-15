@@ -19,9 +19,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import androidx.viewpager2.widget.ViewPager2;
 
 /**
- * User: maodayu
- * Date: 2019/10/12
- * Time: 14:08
+ * author
  */
 public class PBanner<T> extends FrameLayout {
 
@@ -32,6 +30,8 @@ public class PBanner<T> extends FrameLayout {
     private List<T>    mDatas;
     private ViewPager2 viewPager2;
     private DelayTask  delayTask;
+
+    private PageIndicatorformerAdapter mIndicatorformerAdapter;
 
     public PBanner(Context context) {
         this(context, null);
@@ -44,14 +44,6 @@ public class PBanner<T> extends FrameLayout {
     public PBanner(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initialize(context, attrs);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        for (int i = 0; i < getChildCount(); i++) {
-            getChildAt(i).measure(widthMeasureSpec, heightMeasureSpec);
-        }
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
@@ -73,10 +65,13 @@ public class PBanner<T> extends FrameLayout {
         viewPager2.setLayoutParams(params);
         delayTask = new DelayTask(this);
         setCanLoop(true);
-        addView(viewPager2, viewPager2.getLayoutParams());
+        RecyclerView recyclerView = (RecyclerView) viewPager2.getChildAt(0);
+        mIndicatorformerAdapter = new PageIndicatorformerAdapter(recyclerView.getLayoutManager());
+        viewPager2.registerOnPageChangeCallback(mIndicatorformerAdapter);
+        attachViewToParent(viewPager2, 0, viewPager2.getLayoutParams());
     }
 
-    public PBanner withAdapter(PageHelperListener listener, List<T> datas) {
+    public PBanner setAdapter(PageHelperListener listener, List<T> datas) {
         this.mDatas = datas;
         PBAdapter pbAdapter = new PBAdapter(listener);
         viewPager2.setAdapter(pbAdapter);
@@ -86,22 +81,14 @@ public class PBanner<T> extends FrameLayout {
         return this;
     }
 
-    public PBanner withIndicator() {
-        return this;
-    }
-
-    public void startTurning() {
-        startTurning(0);
-    }
-
-    public void setCanLoop(boolean isLoop) {
-        canLoop = isLoop;
-    }
-
     public void startTurning(long delay) {
         delayMillis = delay;
         isTurning = true;
         postDelayed(delayTask, delayMillis);
+    }
+
+    public void setCanLoop(boolean isLoop) {
+        canLoop = isLoop;
     }
 
     public void stopTurning() {
@@ -120,6 +107,13 @@ public class PBanner<T> extends FrameLayout {
         return viewPager2;
     }
 
+    public void setPageIndicator(PageIndicatorformer indicatorformer) {
+        if (indicatorformer == null || indicatorformer == mIndicatorformerAdapter.getPageIndicatorformer())
+            return;
+        mIndicatorformerAdapter.setPageIndicatorformer(indicatorformer, this);
+        mIndicatorformerAdapter.onPageSelected(mCurrentItem);
+    }
+
     private int getStartPos() {
         if (getRealCount() == 0 || !canLoop)
             return 0;
@@ -132,11 +126,11 @@ public class PBanner<T> extends FrameLayout {
         return currPosItem;
     }
 
-    private int getRealCount() {
+    protected int getRealCount() {
         return mDatas == null ? 0 : mDatas.size();
     }
 
-    private int getRealPos(int position) {
+    protected int getRealPos(int position) {
         int real = getRealCount();
         if (real == 0) return 0;
 
@@ -156,6 +150,9 @@ public class PBanner<T> extends FrameLayout {
         public void run() {
             PBanner pBanner = bannerWeakReference.get();
             if (pBanner != null && pBanner.isTurning) {
+                if (pBanner.viewPager2.getCurrentItem() != pBanner.mCurrentItem - 1) {
+                    pBanner.mCurrentItem = pBanner.viewPager2.getCurrentItem();
+                }
                 pBanner.viewPager2.setCurrentItem(++pBanner.mCurrentItem);
                 pBanner.postDelayed(pBanner.delayTask, pBanner.delayMillis);
             }
