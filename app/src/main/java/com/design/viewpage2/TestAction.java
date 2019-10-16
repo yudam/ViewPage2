@@ -1,12 +1,11 @@
 package com.design.viewpage2;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.design.viewpage2.banner.Action;
+import com.banner.pbanner.Action;
 
 /**
  * User: maodayu
@@ -28,8 +27,6 @@ public class TestAction implements Action<String> {
 
     @Override
     public void updateUI(String data) {
-        Log.i("MDY", "updateUI="+data);
-        Log.i("MDY", "updateUI1="+mImageView);
         Glide.with(mContext).load(data).into(mImageView);
     }
 }

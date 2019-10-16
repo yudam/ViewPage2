@@ -1,4 +1,4 @@
-package com.design.viewpage2.banner;
+package com.banner.pbanner;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
-import com.design.viewpage2.PageTransformerImpl;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -31,7 +29,9 @@ public class PBanner<T> extends FrameLayout {
     private ViewPager2 viewPager2;
     private DelayTask  delayTask;
 
+    private PageIndicatorformer        mPageIndicatorformer;
     private PageIndicatorformerAdapter mIndicatorformerAdapter;
+
 
     public PBanner(Context context) {
         this(context, null);
@@ -75,7 +75,6 @@ public class PBanner<T> extends FrameLayout {
         this.mDatas = datas;
         PBAdapter pbAdapter = new PBAdapter(listener);
         viewPager2.setAdapter(pbAdapter);
-        viewPager2.setPageTransformer(new PageTransformerImpl());
         viewPager2.setCurrentItem(getStartPos(), false);
         mCurrentItem = getStartPos();
         return this;
@@ -98,7 +97,6 @@ public class PBanner<T> extends FrameLayout {
         }
     }
 
-
     public boolean getIsTurning() {
         return isTurning;
     }
@@ -110,6 +108,7 @@ public class PBanner<T> extends FrameLayout {
     public void setPageIndicator(PageIndicatorformer indicatorformer) {
         if (indicatorformer == null || indicatorformer == mIndicatorformerAdapter.getPageIndicatorformer())
             return;
+        mPageIndicatorformer = indicatorformer;
         mIndicatorformerAdapter.setPageIndicatorformer(indicatorformer, this);
         mIndicatorformerAdapter.onPageSelected(mCurrentItem);
     }

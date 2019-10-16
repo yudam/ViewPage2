@@ -1,2 +1,2 @@
-include ':app', ':bf_lib'
+include ':app', ':bf_lib', ':pbanner'
 rootProject.name='ViewPage2'

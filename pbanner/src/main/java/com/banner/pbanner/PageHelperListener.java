@@ -1,4 +1,4 @@
-package com.design.viewpage2.banner;
+package com.banner.pbanner;
 
 /**
  * author
