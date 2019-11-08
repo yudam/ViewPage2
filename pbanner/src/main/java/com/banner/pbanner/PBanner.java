@@ -105,6 +105,8 @@ public class PBanner<T> extends FrameLayout {
         return viewPager2;
     }
 
+
+
     public void setPageIndicator(PageIndicatorformer indicatorformer) {
         if (indicatorformer == null || indicatorformer == mIndicatorformerAdapter.getPageIndicatorformer())
             return;

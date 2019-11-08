@@ -12,9 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
- * User: maodayu
- * Date: 2019/10/16
- * Time: 13:52
+ * author
  */
 public class DefaultPageIndicatorformer extends LinearLayout implements PageIndicatorformer {
 
